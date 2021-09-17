@@ -1,7 +1,8 @@
 {
-  "name": "CHANGE THIS : Extension boilerplate",
+  "name": "IG shop assistant",
   "version": "0.0.1",
   "manifest_version": 2,
+  "content_security_policy": "script-src 'self' 'sha256-8RlNm8ex5y9JYZVlSq370pYPWa5MiXVW5H/5deX9544=' https://cdn.jsdelivr.net; object-src 'self'",
   "description": "This extension was created with the awesome extensionizr.com",
   "homepage_url": "http://extensionizr.com",
   "icons": {
@@ -12,6 +13,8 @@
   "default_locale": "en",
   "background": {
     "scripts": [
+      "js/jquery/jquery.js",
+      "src/bg/libig.js",
       "src/bg/background.js"
     ],
     "persistent": true
@@ -26,16 +29,10 @@
     "newtab": "src/override/override.html"
   },
   "permissions": [
-    "tabs"
+    "webRequest",
+    "webRequestBlocking",
+    "tabs",
+    "<all_urls>"
   ],
-  "content_scripts": [
-    {
-      "matches": [
-        "https://www.google.com/*"
-      ],
-      "js": [
-        "src/inject/inject.js"
-      ]
-    }
-  ]
+  "content_scripts": []
 }
