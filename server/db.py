@@ -1,9 +1,16 @@
+#連線到mongodb，且存資料到mongodb的範例程式
+
 from pymongo import MongoClient
 import hashlib
+import certifi
+ca = certifi.where()
 
 def get_database():
     # 對mongoDB連線
-    client = MongoClient("mongodb+srv://ricky:eric033014@user.f8q8g.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+    client = MongoClient(
+        "mongodb+srv://ricky:eric033014@user.f8q8g.mongodb.net/user?retryWrites=true&w=majority",
+        tlsCAFile=ca
+    )
     # 進入igassist這個schema
     db = client['igassist']
     return db
