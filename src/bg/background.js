@@ -17,25 +17,29 @@ var p = new Promise(async function(resolve, reject){
   console.log(tracer_list)
   let i = 0
   while(true){
-    let user = tracer_list[i]
-    console.log(user)
-    let acn_info = await get_hash_code(user.acn)
-    if (acn_info.hash_code.length == 0 || acn_info.uid.length == 0) {
-      console.log(`沒有取得${user.acn}的貼文，請檢查觀看權限`)
-    } else {
-      let token = null
-      while (true) {
-          let rsp = await get_post(acn_info.uid, acn_info.hash_code, token, acn_info.acn);
-          let save_rsp = await save2db(rsp.data)
-          if (rsp.has_next_page == false) {
-              break
-          }
-          token = rsp.next_token
+    if (i<tracer_list.length-1){
+      let user = tracer_list[i]
+      console.log(user)
+      let acn_info = await get_hash_code(user.acn)
+      if (acn_info.hash_code.length == 0 || acn_info.uid.length == 0) {
+        console.log(`沒有取得${user.acn}的貼文，請檢查觀看權限`)
+      } else {
+        let token = null
+        let pCnt = 0
+        while (true) {
+            let rsp = await get_post(acn_info.uid, acn_info.hash_code, token, acn_info.acn);
+            let save_rsp = await save2db(rsp.data)
+            pCnt += rsp.data.length
+            if (rsp.has_next_page == false || pCnt > 5) {
+                break
+            }
+            token = rsp.next_token
+        }
       }
-    }
-    i+=1
-    if (i == tracer_list.length){
-      i = 0
+      i+=1
+      if (i == tracer_list.length){
+        i = 0
+      }
     }
     await sleep(60)
   }
@@ -51,7 +55,7 @@ function sleep(sec){
 
 
 chrome.webRequest.onBeforeSendHeaders.addListener(function (detail) {
-  // change origin for bypass CORS
+  // change origin for bypass CORS
   if ("url" in detail && "initiator" in detail) {
     if (detail.url.indexOf("https://www.instagram.com/") != -1 && detail.initiator.indexOf("chrome-extension://") != -1) {
       var newRef = "https://www.instagram.com/";

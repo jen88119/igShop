@@ -22,7 +22,6 @@ class User(BaseModel):
     username:str
 
 
-
 @app.get("/") # 指定 api 路徑 (get方法)
 def read_root():
     return {"Hello": "World"}
@@ -124,7 +123,6 @@ async def query_data(key_word: str,user: str):
         data['width'] = item['width']
         ret.append(data)
     return json.dumps(ret)
-
 @app.get("/user/query",response_class=PlainTextResponse)
 async def query_data(user: str):
     rst = igDB['user'].find({

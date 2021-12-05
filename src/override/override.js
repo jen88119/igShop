@@ -1,4 +1,21 @@
 (function(){
+    function shuffle(array) {
+        let currentIndex = array.length,  randomIndex;
+      
+        // While there remain elements to shuffle...
+        while (currentIndex != 0) {
+      
+          // Pick a remaining element...
+          randomIndex = Math.floor(Math.random() * currentIndex);
+          currentIndex--;
+      
+          // And swap it with the current element.
+          [array[currentIndex], array[randomIndex]] = [
+            array[randomIndex], array[currentIndex]];
+        }
+      
+        return array;
+      }
     function format_time(timestamp){
         var date_not_formatted = new Date(timestamp);
 
@@ -36,7 +53,7 @@
                         <a href="${data.url}" class="btn btn-primary">查看貼文</a>
                     </div>
                     <div class="card-footer">
-                        <small class="text-muted">${format_time(data.created_time)}</small>
+                        <small class="text-muted">${format_time(data.created_time*1000)}</small>
                         </div>
                     </div>
                 </div>`
@@ -51,6 +68,7 @@
             }, rsp => {
                 console.log(rsp)
                 $('.result').html("")
+                rsp = shuffle(rsp)
                 rsp.forEach(item=>{
                     let tmp = create_block(item)
                     $( ".result" ).append(tmp);
